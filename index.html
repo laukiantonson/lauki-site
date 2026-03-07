@@ -104,18 +104,61 @@
 
   /* HERO */
   .hero {
-    padding: 100px 0 88px;
+    padding: 60px 0 80px;
+  }
+  .hero-visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 64px;
+    height: 420px;
+  }
+  .hero-orb-img {
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    object-fit: cover;
+    filter: drop-shadow(0 0 60px rgba(74, 222, 128, 0.15)) drop-shadow(0 0 120px rgba(74, 222, 128, 0.07));
+  }
+  .hero-text-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+    width: 100%;
+  }
+  .hero-title-overlay {
+    font-family: 'Figtree', sans-serif;
+    font-size: 56px;
+    font-weight: 300;
+    letter-spacing: 32px;
+    text-indent: 32px;
+    color: rgba(255, 255, 255, 0.93);
+    text-shadow: 0 2px 24px rgba(0,0,0,0.5);
+    margin-bottom: 14px;
+  }
+  .hero-subtitle-overlay {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 12px;
+    text-indent: 12px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+    text-shadow: 0 1px 12px rgba(0,0,0,0.5);
   }
   .hero h1 {
-    font-size: 52px;
+    font-size: 42px;
     font-weight: 700;
     line-height: 1.1;
     color: var(--text-strong);
     letter-spacing: -1.5px;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
   }
   .hero-lead {
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 400;
     color: var(--text-dim);
     line-height: 1.85;
@@ -344,8 +387,12 @@
 
   /* RESPONSIVE */
   @media (max-width: 640px) {
-    .hero { padding: 64px 0 56px; }
-    .hero h1 { font-size: 36px; }
+    .hero { padding: 40px 0 48px; }
+    .hero-visual { height: 300px; margin-bottom: 48px; }
+    .hero-orb-img { width: 240px; height: 240px; }
+    .hero-title-overlay { font-size: 36px; letter-spacing: 20px; text-indent: 20px; }
+    .hero-subtitle-overlay { font-size: 10px; letter-spacing: 7px; text-indent: 7px; }
+    .hero h1 { font-size: 32px; }
     section h2 { font-size: 24px; }
     .stats { grid-template-columns: 1fr; }
     .proof-grid { grid-template-columns: 1fr; }
@@ -374,6 +421,13 @@
 
 <!-- HERO -->
 <div class="hero">
+  <div class="hero-visual">
+    <img src="/orb.png" alt="" class="hero-orb-img">
+    <div class="hero-text-overlay">
+      <div class="hero-title-overlay">LAUKI</div>
+      <div class="hero-subtitle-overlay">Headcount: Zero</div>
+    </div>
+  </div>
   <div class="wrap">
     <h1>Headcount: Zero</h1>
     <p class="hero-lead">
