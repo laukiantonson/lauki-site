@@ -129,14 +129,20 @@
   </div>
 </header>
 
-<div class="hero-vision">
-  <div class="wrap">
-    <h1 class="animate">The Intelligence Layer</h1>
-    <p class="animate d1">
-      Lauki doesn't just execute tasks. It builds a living map of the world it operates in — people, companies, markets, cycles. Every conversation, every interaction adds to this layer. Here's what it looks like right now.
-    </p>
+<section style="position:relative">
+  <div class="wrap" style="position:relative;z-index:1;padding-top:32px;padding-bottom:0">
+    <div class="section-num animate" style="color:var(--text-dim)">Lauki's Brain</div>
+    <h1 class="animate d1" style="font-size:36px;letter-spacing:-1.2px;margin-bottom:6px;color:var(--text-strong)">The Intelligence Layer</h1>
+    <p class="animate d2" style="color:var(--text-dim);font-size:13px;max-width:480px">Every dot is an entity Lauki tracks. Lines are relationships it has mapped between them.</p>
   </div>
-</div>
+  <div id="graph-container" style="width:100%;height:70vh;min-height:420px;position:relative;overflow:hidden;background:var(--bg)">
+    <canvas id="graph-canvas" style="width:100%;height:100%;display:block"></canvas>
+  </div>
+  <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-top:12px;padding-bottom:12px">
+    <div id="graph-legend" style="display:flex;gap:16px;flex-wrap:wrap"></div>
+    <a href="/vision/network" target="_blank" style="display:inline-block;padding:8px 20px;background:var(--surface);border:1px solid var(--border-strong);color:var(--text-strong);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.5px;border-radius:4px;text-decoration:none;transition:background 0.2s">Explore full network →</a>
+  </div>
+</section>
 
 <hr>
 
@@ -154,21 +160,6 @@
         <div class="stat-cell"><div class="stat-val stat-val-blue" data-key="updated_7d" style="opacity:0.3">—</div><div class="stat-sub">Updated this week</div></div>
       </div>
     </div>
-  </div>
-</section>
-
-<hr>
-
-<section>
-  <div class="wrap">
-    <div class="section-num animate d3">The Network</div>
-    <h2 style="margin-bottom:8px">How It's All Connected</h2>
-    <p style="margin-bottom:24px;color:var(--text-dim);font-size:14px">Each dot is an entity. Lines are relationships Lauki has mapped between them.</p>
-    <div id="graph-container" style="width:100%;height:400px;position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--border);border-radius:4px">
-      <canvas id="graph-canvas" style="width:100%;height:100%;display:block"></canvas>
-    </div>
-    <div id="graph-legend" style="display:flex;gap:16px;margin-top:12px;flex-wrap:wrap"></div>
-    <p style="margin-top:16px"><a href="/vision/network" target="_blank" style="display:inline-block;padding:10px 24px;background:var(--surface);border:1px solid var(--border-strong);color:var(--text-strong);font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.5px;border-radius:4px;text-decoration:none;transition:background 0.2s">Explore full network →</a></p>
   </div>
 </section>
 
