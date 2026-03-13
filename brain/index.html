@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lauki — Vision</title>
+<title>Lauki — Brain</title>
 <meta name="description" content="Lauki's live intelligence layer — tracking thousands of entities across people, companies, and markets.">
 <meta name="theme-color" content="#060606">
-<link rel="canonical" href="https://lauki.ai/vision">
-<meta property="og:title" content="Lauki — Vision">
+<link rel="canonical" href="https://lauki.ai/brain">
+<meta property="og:title" content="Lauki — Brain">
 <meta property="og:description" content="Live intelligence layer — tracking thousands of entities across people, companies, and markets.">
-<meta property="og:url" content="https://lauki.ai/vision">
+<meta property="og:url" content="https://lauki.ai/brain">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://lauki.ai/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@laukiantonson">
-<meta name="twitter:title" content="Lauki — Vision">
+<meta name="twitter:title" content="Lauki — Brain">
 <meta name="twitter:image" content="https://lauki.ai/og.png">
 <link rel="icon" type="image/jpeg" href="/avatar.jpg">
 <style>
@@ -62,10 +62,6 @@
   section { padding: 68px 0; }
   .section-num { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 28px; }
 
-  .hero-vision { padding: 80px 0 48px; }
-  .hero-vision h1 { font-size: 42px; font-weight: 700; line-height: 1.1; color: var(--text-strong); letter-spacing: -1.5px; margin-bottom: 24px; }
-  .hero-vision p { font-size: 16px; color: var(--text-dim); line-height: 1.85; max-width: 600px; }
-
   .big-number { font-size: 72px; font-weight: 800; color: var(--text-strong); letter-spacing: -3px; line-height: 1; }
   .big-label { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--text-dim); margin-top: 12px; line-height: 1.6; }
 
@@ -96,8 +92,6 @@
   .footer-links a { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
   .footer-links a:hover { color: var(--accent); }
 
-  .loading { color: var(--text-muted); font-family: 'Space Mono', monospace; font-size: 12px; }
-
   @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
   .animate { animation: fadeUp 0.5s ease-out both; }
   .d1 { animation-delay: 0.1s; } .d2 { animation-delay: 0.2s; } .d3 { animation-delay: 0.3s; } .d4 { animation-delay: 0.4s; }
@@ -113,11 +107,8 @@
   .tt-dim { color: #666; }
 
   @media (max-width: 640px) {
-    .hero-vision { padding: 40px 0 32px; }
-    .hero-vision h1 { font-size: 32px; }
     .big-number { font-size: 48px; }
     .stat-row { grid-template-columns: 1fr; }
-    .category-grid { grid-template-columns: 1fr 1fr; }
     .wrap { padding: 0 20px; }
     .nav-right { gap: 10px; }
     .footer-top { flex-direction: column; gap: 12px; align-items: flex-start; }
@@ -257,8 +248,8 @@
 <script>
 (function() {
   const GRAPH_API = 'https://lauki.mogra.xyz/v1/public/entity-graph';
-  const colors = { people: '#34a85a', companies: '#5b9bf5', projects: '#e8a838', events: '#e85d75', other: '#9b7fd4', cycles: '#6bccc9' };
-  const labels = { people: 'People', companies: 'Companies', projects: 'Projects', events: 'Events', other: 'Other', cycles: 'Cycles' };
+  const colors = { people: '#34a85a', companies: '#5b9bf5', projects: '#e8a838', events: '#e85d75', other: '#9b7fd4' };
+  const labels = { people: 'People', companies: 'Companies', projects: 'Projects', events: 'Events', other: 'Other' };
 
   fetch(GRAPH_API).then(r => r.json()).then(data => {
     const canvas = document.getElementById('graph-canvas');

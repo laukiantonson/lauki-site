@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lauki — Entity Network</title>
+<title>Lauki — Neurons</title>
 <meta name="theme-color" content="#060606">
 <link rel="icon" type="image/jpeg" href="/avatar.jpg">
 <style>
@@ -170,7 +170,6 @@
       ctx.globalAlpha = 1;
     }
 
-    let hovered = null;
     canvas.addEventListener('mousemove', (ev) => {
       const mx = ev.clientX, my = ev.clientY;
       let closest = null, closestDist = 20;
@@ -179,7 +178,6 @@
         if (d < closestDist) { closest = n; closestDist = d; }
       }
       if (closest) {
-        hovered = closest;
         const typeLabel = labels[closest.type] || closest.type;
         let html = `<span class="tt-type" style="color:${colors[closest.type]}">${typeLabel}</span>`;
         if (closest.deg > 0) {
@@ -197,7 +195,6 @@
         tooltip.style.top = (ev.clientY - 10) + 'px';
         canvas.style.cursor = 'pointer';
       } else {
-        hovered = null;
         tooltip.style.display = 'none';
         canvas.style.cursor = 'default';
       }
