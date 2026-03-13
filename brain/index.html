@@ -303,16 +303,13 @@
 
     function tick() {
       const cx = W / 2, cy = H / 2;
-      const wrapHalf = 360;
-      const boundL = cx - wrapHalf, boundR = cx + wrapHalf;
       for (const n of nodes) {
         if (n.connected) {
           n.vx += (cx - n.x) * 0.0002;
           n.vy += (cy - n.y) * 0.0002;
         } else {
-          if (n.x < boundL) n.vx += (boundL - n.x) * 0.0003;
-          else if (n.x > boundR) n.vx += (boundR - n.x) * 0.0003;
-          n.vy += (cy - n.y) * 0.00005;
+          n.vx += (cx - n.x) * 0.000008;
+          n.vy += (cy - n.y) * 0.000008;
         }
       }
 
