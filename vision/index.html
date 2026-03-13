@@ -183,31 +183,65 @@
 </footer>
 
 <script>
-(async function() {
+(function() {
   const el = document.getElementById('stats-content');
-  try {
-    const r = await fetch('https://lauki.mogra.xyz/v1/public/entity-stats');
-    if (!r.ok) throw new Error('Failed to load');
-    const d = await r.json();
+  const API = 'https://lauki.mogra.xyz/v1/public/entity-stats';
+  let prev = {};
+  let firstLoad = true;
 
-    const fmt = n => n.toLocaleString();
-
-    let h = '';
-
-    h += `<div class="big-number animate">${fmt(d.total)}</div>`;
-    h += `<div class="big-label animate d1">entities tracked — people, companies, projects, and markets</div>`;
-
-    h += '<div class="stat-row animate d2">';
-    h += `<div class="stat-cell"><div class="stat-val stat-val-green">+${fmt(d.created_24h)}</div><div class="stat-sub">New entities today</div></div>`;
-    h += `<div class="stat-cell"><div class="stat-val stat-val-blue">${fmt(d.updated_24h)}</div><div class="stat-sub">Updated today</div></div>`;
-    h += `<div class="stat-cell"><div class="stat-val stat-val-green">+${fmt(d.created_7d)}</div><div class="stat-sub">Created this week</div></div>`;
-    h += `<div class="stat-cell"><div class="stat-val stat-val-blue">${fmt(d.updated_7d)}</div><div class="stat-sub">Updated this week</div></div>`;
-    h += '</div>';
-
-    el.innerHTML = h;
-  } catch (e) {
-    el.innerHTML = '<div class="loading">Stats temporarily unavailable.</div>';
+  function countUp(element, from, to, prefix) {
+    prefix = prefix || '';
+    const duration = 800;
+    const start = performance.now();
+    const step = (now) => {
+      const t = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - t, 3);
+      const val = Math.round(from + (to - from) * ease);
+      element.textContent = prefix + val.toLocaleString();
+      if (t < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
   }
+
+  function render(d) {
+    if (firstLoad) {
+      let h = '';
+      h += '<div class="big-number animate" data-key="total">0</div>';
+      h += '<div class="big-label animate d1">entities tracked — people, companies, projects, and markets</div>';
+      h += '<div class="stat-row animate d2">';
+      h += '<div class="stat-cell"><div class="stat-val stat-val-green" data-key="created_24h" data-prefix="+">+0</div><div class="stat-sub">New entities today</div></div>';
+      h += '<div class="stat-cell"><div class="stat-val stat-val-blue" data-key="updated_24h">0</div><div class="stat-sub">Updated today</div></div>';
+      h += '<div class="stat-cell"><div class="stat-val stat-val-green" data-key="created_7d" data-prefix="+">+0</div><div class="stat-sub">Created this week</div></div>';
+      h += '<div class="stat-cell"><div class="stat-val stat-val-blue" data-key="updated_7d">0</div><div class="stat-sub">Updated this week</div></div>';
+      h += '</div>';
+      el.innerHTML = h;
+      firstLoad = false;
+    }
+
+    const keys = ['total', 'created_24h', 'updated_24h', 'created_7d', 'updated_7d'];
+    for (const key of keys) {
+      const node = el.querySelector('[data-key="' + key + '"]');
+      if (!node) continue;
+      const from = prev[key] || 0;
+      const to = d[key] || 0;
+      if (from !== to) {
+        countUp(node, from, to, node.dataset.prefix || '');
+        if (prev[key] !== undefined) node.style.transition = 'color 0.3s';
+      }
+    }
+    prev = { ...d };
+  }
+
+  async function refresh() {
+    try {
+      const r = await fetch(API);
+      if (!r.ok) return;
+      render(await r.json());
+    } catch {}
+  }
+
+  refresh();
+  setInterval(refresh, 60000);
 })();
 </script>
 
