@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lauki — Entity Network</title>
+<meta name="theme-color" content="#060606">
+<link rel="icon" type="image/jpeg" href="/avatar.jpg">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #060606; overflow: hidden; cursor: default; }
+  canvas { display: block; width: 100vw; height: 100vh; }
+  #legend {
+    position: fixed; bottom: 20px; left: 20px;
+    display: flex; gap: 14px; flex-wrap: wrap;
+    font-family: 'Space Mono', monospace; font-size: 10px; color: #8a8a8a;
+  }
+  .leg { display: flex; align-items: center; gap: 6px; }
+  .leg-dot { width: 8px; height: 8px; border-radius: 50%; }
+  #back {
+    position: fixed; top: 20px; left: 20px;
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    color: #505050; text-decoration: none; letter-spacing: 0.5px;
+    transition: color 0.2s;
+  }
+  #back:hover { color: #34a85a; }
+  #info {
+    position: fixed; top: 20px; right: 20px;
+    font-family: 'Space Mono', monospace; font-size: 10px;
+    color: #505050; text-align: right;
+  }
+  #tooltip {
+    position: fixed; display: none; pointer-events: none;
+    background: rgba(10,10,10,0.92); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px; padding: 8px 12px;
+    font-family: 'Space Mono', monospace; font-size: 10px; color: #ccc;
+    line-height: 1.6; white-space: nowrap;
+  }
+  .tt-type { font-weight: 700; text-transform: capitalize; }
+  .tt-dim { color: #666; }
+</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+<a id="back" href="/vision">← Back</a>
+<div id="info"></div>
+<div id="legend"></div>
+<div id="tooltip"></div>
+
+<script>
+(function() {
+  const API = 'https://lauki.mogra.xyz/v1/public/entity-graph';
+  const colors = { people: '#34a85a', companies: '#5b9bf5', projects: '#e8a838', events: '#e85d75', other: '#9b7fd4' };
+  const labels = { people: 'People', companies: 'Companies', projects: 'Projects', events: 'Events', other: 'Other' };
+
+  fetch(API).then(r => r.json()).then(data => {
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+    const tooltip = document.getElementById('tooltip');
+    const dpr = window.devicePixelRatio || 1;
+    let W, H;
+
+    function resize() {
+      W = window.innerWidth; H = window.innerHeight;
+      canvas.width = W * dpr; canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const adj = new Array(data.nodes.length).fill(null).map(() => []);
+    for (const e of data.edges) {
+      adj[e.source].push(e.target);
+      adj[e.target].push(e.source);
+    }
+    const maxDeg = Math.max(...adj.map(a => a.length), 1);
+
+    const connectedIdx = [];
+    const nodes = data.nodes.map((n, i) => {
+      const deg = adj[i].length;
+      const connected = deg > 0;
+      if (connected) connectedIdx.push(i);
+      return {
+        ...n, deg, connected,
+        x: W/2 + (Math.random() - 0.5) * W * 0.9,
+        y: H/2 + (Math.random() - 0.5) * H * 0.9,
+        vx: 0, vy: 0,
+        r: connected ? 2 + (deg / maxDeg) * 10 : 1.2
+      };
+    });
+
+    document.getElementById('info').textContent = nodes.length + ' entities · ' + data.edges.length + ' connections';
+
+    const legend = document.getElementById('legend');
+    const seenTypes = new Set(nodes.map(n => n.type));
+    for (const type of seenTypes) {
+      legend.innerHTML += `<div class="leg"><div class="leg-dot" style="background:${colors[type]}"></div>${labels[type] || type}</div>`;
+    }
+
+    function tick() {
+      const cx = W / 2, cy = H / 2;
+      for (const n of nodes) {
+        const grav = n.connected ? 0.0002 : 0.00003;
+        n.vx += (cx - n.x) * grav;
+        n.vy += (cy - n.y) * grav;
+      }
+
+      for (const e of data.edges) {
+        const s = nodes[e.source], t = nodes[e.target];
+        const dx = t.x - s.x, dy = t.y - s.y;
+        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+        const f = (dist - 60) * 0.001;
+        s.vx += (dx / dist) * f; s.vy += (dy / dist) * f;
+        t.vx -= (dx / dist) * f; t.vy -= (dy / dist) * f;
+      }
+
+      for (let ii = 0; ii < connectedIdx.length; ii++) {
+        for (let jj = ii + 1; jj < connectedIdx.length; jj++) {
+          if (Math.random() > 0.05) continue;
+          const a = nodes[connectedIdx[ii]], b = nodes[connectedIdx[jj]];
+          const dx = b.x - a.x, dy = b.y - a.y;
+          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+          if (dist < 80) {
+            const f = 1.5 / dist;
+            a.vx -= (dx / dist) * f; a.vy -= (dy / dist) * f;
+            b.vx += (dx / dist) * f; b.vy += (dy / dist) * f;
+          }
+        }
+      }
+
+      for (const n of nodes) {
+        n.vx *= 0.92; n.vy *= 0.92;
+        n.vx += (Math.random() - 0.5) * (n.connected ? 0.05 : 0.02);
+        n.vy += (Math.random() - 0.5) * (n.connected ? 0.05 : 0.02);
+        n.x += n.vx; n.y += n.vy;
+        n.x = Math.max(20, Math.min(W - 20, n.x));
+        n.y = Math.max(20, Math.min(H - 20, n.y));
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+
+      ctx.lineWidth = 0.5; ctx.strokeStyle = '#fff'; ctx.globalAlpha = 0.04;
+      for (const e of data.edges) {
+        const s = nodes[e.source], t = nodes[e.target];
+        ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(t.x, t.y); ctx.stroke();
+      }
+
+      for (const n of nodes) {
+        const col = colors[n.type] || '#888';
+        if (n.connected && n.r > 4) {
+          ctx.globalAlpha = 0.05;
+          ctx.beginPath(); ctx.arc(n.x, n.y, n.r * 3, 0, Math.PI * 2);
+          ctx.fillStyle = col; ctx.fill();
+        }
+        ctx.globalAlpha = n.connected ? 0.9 : 0.25;
+        ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.fillStyle = col; ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    let hovered = null;
+    canvas.addEventListener('mousemove', (ev) => {
+      const mx = ev.clientX, my = ev.clientY;
+      let closest = null, closestDist = 20;
+      for (const n of nodes) {
+        const d = Math.sqrt((n.x - mx) ** 2 + (n.y - my) ** 2);
+        if (d < closestDist) { closest = n; closestDist = d; }
+      }
+      if (closest) {
+        hovered = closest;
+        const typeLabel = labels[closest.type] || closest.type;
+        let html = `<span class="tt-type" style="color:${colors[closest.type]}">${typeLabel}</span>`;
+        if (closest.deg > 0) {
+          const breakdown = {};
+          for (const ni of adj[closest.id]) breakdown[nodes[ni].type] = (breakdown[nodes[ni].type] || 0) + 1;
+          html += `<br>${closest.deg} connection${closest.deg > 1 ? 's' : ''}`;
+          const parts = Object.entries(breakdown).map(([t, c]) => `${c} ${labels[t] || t}`);
+          html += `<br><span class="tt-dim">→ ${parts.join(', ')}</span>`;
+        } else {
+          html += `<br><span class="tt-dim">No connections yet</span>`;
+        }
+        tooltip.innerHTML = html;
+        tooltip.style.display = 'block';
+        tooltip.style.left = (ev.clientX + 14) + 'px';
+        tooltip.style.top = (ev.clientY - 10) + 'px';
+        canvas.style.cursor = 'pointer';
+      } else {
+        hovered = null;
+        tooltip.style.display = 'none';
+        canvas.style.cursor = 'default';
+      }
+    });
+
+    function loop() {
+      for (let i = 0; i < 2; i++) tick();
+      draw();
+      requestAnimationFrame(loop);
+    }
+    loop();
+  });
+})();
+</script>
+
+</body>
+</html>
