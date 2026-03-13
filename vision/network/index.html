@@ -101,10 +101,16 @@
 
     function tick() {
       const cx = W / 2, cy = H / 2;
+      const marginX = W * 0.1, marginY = H * 0.1;
       for (const n of nodes) {
         if (n.connected) {
           n.vx += (cx - n.x) * 0.0002;
           n.vy += (cy - n.y) * 0.0002;
+        } else {
+          if (n.x < marginX) n.vx += (marginX - n.x) * 0.0003;
+          else if (n.x > W - marginX) n.vx += (W - marginX - n.x) * 0.0003;
+          if (n.y < marginY) n.vy += (marginY - n.y) * 0.0003;
+          else if (n.y > H - marginY) n.vy += (H - marginY - n.y) * 0.0003;
         }
       }
 
