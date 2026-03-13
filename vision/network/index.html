@@ -102,9 +102,10 @@
     function tick() {
       const cx = W / 2, cy = H / 2;
       for (const n of nodes) {
-        const grav = n.connected ? 0.0002 : 0.00003;
-        n.vx += (cx - n.x) * grav;
-        n.vy += (cy - n.y) * grav;
+        if (n.connected) {
+          n.vx += (cx - n.x) * 0.0002;
+          n.vy += (cy - n.y) * 0.0002;
+        }
       }
 
       for (const e of data.edges) {
