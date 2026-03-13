@@ -165,7 +165,7 @@
     <h2 style="margin-bottom:8px">How It's All Connected</h2>
     <p style="margin-bottom:24px;color:var(--text-dim);font-size:14px">Each dot is an entity. Lines are relationships Lauki has mapped between them.</p>
   </div>
-  <div id="graph-container" style="width:100%;height:520px;position:relative;overflow:hidden;background:var(--bg)">
+  <div id="graph-container" style="width:100%;height:80vh;min-height:500px;position:relative;overflow:hidden;background:var(--bg)">
     <canvas id="graph-canvas" style="width:100%;height:100%;display:block"></canvas>
   </div>
   <div class="wrap">
@@ -275,19 +275,17 @@
     resize();
     window.addEventListener('resize', resize);
 
+    const degreeCount = new Array(data.nodes.length).fill(0);
+    for (const e of data.edges) { degreeCount[e.source]++; degreeCount[e.target]++; }
+    const maxDeg = Math.max(...degreeCount, 1);
+
     const nodes = data.nodes.map(n => ({
       ...n,
-      x: W/2 + (Math.random() - 0.5) * W * 0.8,
-      y: H/2 + (Math.random() - 0.5) * H * 0.8,
+      x: W/2 + (Math.random() - 0.5) * W * 0.9,
+      y: H/2 + (Math.random() - 0.5) * H * 0.9,
       vx: 0, vy: 0,
-      r: 2
+      r: 1.5 + (degreeCount[n.id] / maxDeg) * 8
     }));
-
-    const adj = new Array(nodes.length).fill(null).map(() => []);
-    for (const e of data.edges) {
-      adj[e.source].push(e.target);
-      adj[e.target].push(e.source);
-    }
 
     const legend = document.getElementById('graph-legend');
     const typeCounts = {};
@@ -296,25 +294,21 @@
       legend.innerHTML += `<div style="display:flex;align-items:center;gap:6px;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim)"><div style="width:8px;height:8px;border-radius:50%;background:${colors[type]}"></div>${labels[type] || type} (${count})</div>`;
     }
 
-    let alpha = 1;
     const cX = W / 2, cY = H / 2;
 
     function tick() {
-      if (alpha < 0.001) return;
-      alpha *= 0.995;
-
       for (let i = 0; i < nodes.length; i++) {
         const n = nodes[i];
-        n.vx += (cX - n.x) * 0.0003;
-        n.vy += (cY - n.y) * 0.0003;
+        n.vx += (cX - n.x) * 0.00015;
+        n.vy += (cY - n.y) * 0.00015;
       }
 
       for (const e of data.edges) {
         const s = nodes[e.source], t = nodes[e.target];
         const dx = t.x - s.x, dy = t.y - s.y;
         const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-        const target = 30;
-        const f = (dist - target) * 0.002;
+        const target = 50;
+        const f = (dist - target) * 0.001;
         const fx = (dx / dist) * f, fy = (dy / dist) * f;
         s.vx += fx; s.vy += fy;
         t.vx -= fx; t.vy -= fy;
@@ -322,12 +316,12 @@
 
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
-          if (Math.random() > 0.05) continue;
+          if (Math.random() > 0.04) continue;
           const a = nodes[i], b = nodes[j];
           const dx = b.x - a.x, dy = b.y - a.y;
           const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-          if (dist < 60) {
-            const f = 0.5 / dist;
+          if (dist < 80) {
+            const f = 0.8 / dist;
             const fx = (dx / dist) * f, fy = (dy / dist) * f;
             a.vx -= fx; a.vy -= fy;
             b.vx += fx; b.vy += fy;
@@ -336,44 +330,51 @@
       }
 
       for (const n of nodes) {
-        n.vx *= 0.9; n.vy *= 0.9;
+        n.vx *= 0.92; n.vy *= 0.92;
+        n.vx += (Math.random() - 0.5) * 0.08;
+        n.vy += (Math.random() - 0.5) * 0.08;
         n.x += n.vx; n.y += n.vy;
-        n.x = Math.max(10, Math.min(W - 10, n.x));
-        n.y = Math.max(10, Math.min(H - 10, n.y));
+        n.x = Math.max(20, Math.min(W - 20, n.x));
+        n.y = Math.max(20, Math.min(H - 20, n.y));
       }
     }
 
     function draw() {
       ctx.clearRect(0, 0, W, H);
 
-      ctx.globalAlpha = 0.08;
+      ctx.globalAlpha = 0.06;
+      ctx.lineWidth = 0.5;
+      ctx.strokeStyle = '#fff';
       for (const e of data.edges) {
         const s = nodes[e.source], t = nodes[e.target];
         ctx.beginPath();
         ctx.moveTo(s.x, s.y);
         ctx.lineTo(t.x, t.y);
-        ctx.strokeStyle = '#fff';
-        ctx.lineWidth = 0.5;
         ctx.stroke();
       }
 
-      ctx.globalAlpha = 0.85;
       for (const n of nodes) {
+        const col = colors[n.type] || '#888';
+        if (n.r > 3) {
+          ctx.globalAlpha = 0.08;
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.r * 3, 0, Math.PI * 2);
+          ctx.fillStyle = col;
+          ctx.fill();
+        }
+        ctx.globalAlpha = 0.9;
         ctx.beginPath();
         ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-        ctx.fillStyle = colors[n.type] || '#888';
+        ctx.fillStyle = col;
         ctx.fill();
       }
       ctx.globalAlpha = 1;
     }
 
-    let frame = 0;
     function loop() {
-      for (let i = 0; i < 3; i++) tick();
+      for (let i = 0; i < 2; i++) tick();
       draw();
-      frame++;
-      if (alpha > 0.001 || frame < 300) requestAnimationFrame(loop);
-      else draw();
+      requestAnimationFrame(loop);
     }
     loop();
   }).catch(() => {});
