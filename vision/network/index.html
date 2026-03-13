@@ -91,7 +91,10 @@
       };
     });
 
-    document.getElementById('info').textContent = nodes.length + ' entities · ' + data.edges.length + ' connections';
+    document.getElementById('info').textContent = data.edges.length + ' connections';
+    fetch('https://lauki.mogra.xyz/v1/public/entity-stats').then(r=>r.json()).then(s=>{
+      document.getElementById('info').textContent = s.total.toLocaleString() + ' entities · ' + data.edges.length + ' connections';
+    }).catch(()=>{});
 
     const legend = document.getElementById('legend');
     const seenTypes = new Set(nodes.map(n => n.type));
