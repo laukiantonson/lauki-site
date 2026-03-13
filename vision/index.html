@@ -237,17 +237,8 @@
     }
     h += '</div>';
 
-    if (d.daily && d.daily.length) {
-      const maxV = Math.max(...d.daily.map(r => Math.max(r.created, r.updated)), 1);
-      h += '<div class="chart-section animate d4"><div class="chart-title">Daily Activity</div><div class="chart-bars">';
-      for (const row of d.daily) {
-        const cPct = Math.max((row.created / maxV) * 100, row.created ? 2 : 0);
-        const uPct = Math.max((row.updated / maxV) * 100, row.updated ? 2 : 0);
-        const lbl = row.day.slice(5);
-        h += `<div class="bar-group"><div class="bar-pair"><div class="bar" style="height:${cPct}%;background:var(--accent)"><div class="bar-tip">${lbl}: ${row.created} created</div></div><div class="bar" style="height:${uPct}%;background:var(--blue)"><div class="bar-tip">${lbl}: ${row.updated} updated</div></div></div><div class="bar-lbl">${lbl}</div></div>`;
-      }
-      h += '</div><div class="chart-legend"><div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Created</div><div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Updated</div></div></div>';
-    }
+    // Chart disabled for now — will re-enable when there's more data
+    // if (d.daily && d.daily.length) { ... }
 
     el.innerHTML = h;
   } catch (e) {
