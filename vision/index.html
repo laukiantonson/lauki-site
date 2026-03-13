@@ -102,6 +102,16 @@
   .animate { animation: fadeUp 0.5s ease-out both; }
   .d1 { animation-delay: 0.1s; } .d2 { animation-delay: 0.2s; } .d3 { animation-delay: 0.3s; } .d4 { animation-delay: 0.4s; }
 
+  #tooltip {
+    position: fixed; display: none; pointer-events: none;
+    background: rgba(10,10,10,0.92); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px; padding: 8px 12px;
+    font-family: 'Space Mono', monospace; font-size: 10px; color: #ccc;
+    line-height: 1.6; white-space: nowrap; z-index: 10;
+  }
+  .tt-type { font-weight: 700; text-transform: capitalize; }
+  .tt-dim { color: #666; }
+
   @media (max-width: 640px) {
     .hero-vision { padding: 40px 0 32px; }
     .hero-vision h1 { font-size: 32px; }
@@ -128,6 +138,8 @@
     </div>
   </div>
 </header>
+
+<div id="tooltip"></div>
 
 <section style="position:relative">
   <div class="wrap" style="position:relative;z-index:1;padding-top:32px;padding-bottom:0">
@@ -358,6 +370,39 @@
       draw();
       requestAnimationFrame(loop);
     }
+    const tooltip = document.getElementById('tooltip');
+    canvas.addEventListener('mousemove', (ev) => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = ev.clientX - rect.left, my = ev.clientY - rect.top;
+      let closest = null, closestDist = 20;
+      for (const n of nodes) {
+        const d = Math.sqrt((n.x - mx) ** 2 + (n.y - my) ** 2);
+        if (d < closestDist) { closest = n; closestDist = d; }
+      }
+      if (closest) {
+        const typeLabel = labels[closest.type] || closest.type;
+        let html = `<span class="tt-type" style="color:${colors[closest.type]}">${typeLabel}</span>`;
+        if (closest.deg > 0) {
+          const breakdown = {};
+          for (const ni of adj[closest.id]) breakdown[nodes[ni].type] = (breakdown[nodes[ni].type] || 0) + 1;
+          html += `<br>${closest.deg} connection${closest.deg > 1 ? 's' : ''}`;
+          const parts = Object.entries(breakdown).map(([t, c]) => `${c} ${labels[t] || t}`);
+          html += `<br><span class="tt-dim">→ ${parts.join(', ')}</span>`;
+        } else {
+          html += `<br><span class="tt-dim">No connections yet</span>`;
+        }
+        tooltip.innerHTML = html;
+        tooltip.style.display = 'block';
+        tooltip.style.left = (ev.clientX + 14) + 'px';
+        tooltip.style.top = (ev.clientY - 10) + 'px';
+        canvas.style.cursor = 'pointer';
+      } else {
+        tooltip.style.display = 'none';
+        canvas.style.cursor = 'default';
+      }
+    });
+    canvas.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
+
     loop();
   }).catch(() => {});
 })();
