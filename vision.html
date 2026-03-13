@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lauki — Vision</title>
+<meta name="description" content="Lauki's live intelligence layer — tracking thousands of entities across people, companies, and markets.">
+<meta name="theme-color" content="#060606">
+<link rel="canonical" href="https://lauki.ai/vision">
+<meta property="og:title" content="Lauki — Vision">
+<meta property="og:description" content="Live intelligence layer — tracking thousands of entities across people, companies, and markets.">
+<meta property="og:url" content="https://lauki.ai/vision">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://lauki.ai/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@laukiantonson">
+<meta name="twitter:title" content="Lauki — Vision">
+<meta name="twitter:image" content="https://lauki.ai/og.png">
+<link rel="icon" type="image/jpeg" href="/avatar.jpg">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --bg: #060606;
+    --surface: #0b0b0b;
+    --border: rgba(255,255,255,0.06);
+    --border-strong: rgba(255,255,255,0.12);
+    --text: #c8c8c8;
+    --text-strong: #f0f0f0;
+    --text-dim: #8a8a8a;
+    --text-muted: #505050;
+    --accent: #34a85a;
+    --accent-dim: rgba(52, 168, 90, 0.08);
+    --blue: #5b9bf5;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Figtree', -apple-system, sans-serif;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--accent); color: var(--bg); }
+  a { color: var(--accent); text-decoration: none; transition: opacity 0.2s; }
+  a:hover { opacity: 0.8; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 28px; }
+
+  header { padding: 24px 0; border-bottom: 1px solid var(--border); }
+  header .wrap { display: flex; justify-content: space-between; align-items: center; }
+  .logo-group { display: flex; align-items: center; gap: 12px; }
+  .logo-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-strong); }
+  .mark { font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-strong); text-decoration: none; }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .nav-link { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-muted); letter-spacing: 0.5px; text-decoration: none; transition: color 0.2s; }
+  .nav-link:hover { color: var(--accent); opacity: 1; }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 0; }
+  section { padding: 68px 0; }
+  .section-num { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 28px; }
+
+  .hero-vision { padding: 80px 0 48px; }
+  .hero-vision h1 { font-size: 42px; font-weight: 700; line-height: 1.1; color: var(--text-strong); letter-spacing: -1.5px; margin-bottom: 24px; }
+  .hero-vision p { font-size: 16px; color: var(--text-dim); line-height: 1.85; max-width: 600px; }
+
+  .big-number { font-size: 72px; font-weight: 800; color: var(--text-strong); letter-spacing: -3px; line-height: 1; }
+  .big-label { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--text-dim); margin-top: 12px; line-height: 1.6; }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin: 36px 0;
+  }
+  .stat-cell { background: var(--surface); padding: 32px 28px; }
+  .stat-val { font-size: 36px; font-weight: 700; color: var(--text-strong); letter-spacing: -1px; margin-bottom: 8px; }
+  .stat-val-green { color: var(--accent); }
+  .stat-val-blue { color: var(--blue); }
+  .stat-sub { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+
+  .category-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin: 36px 0;
+  }
+  .cat-cell { background: var(--surface); padding: 24px 20px; }
+  .cat-val { font-size: 28px; font-weight: 700; color: var(--text-strong); letter-spacing: -0.5px; margin-bottom: 6px; }
+  .cat-label { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+
+  .chart-section { margin: 36px 0; background: var(--surface); border: 1px solid var(--border); padding: 28px; }
+  .chart-title { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; }
+  .chart-bars { display: flex; align-items: flex-end; gap: 4px; height: 120px; }
+  .bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; }
+  .bar-pair { display: flex; gap: 2px; align-items: flex-end; width: 100%; justify-content: center; height: 100%; }
+  .bar { min-width: 4px; max-width: 14px; width: 45%; border-radius: 2px 2px 0 0; transition: opacity 0.2s; cursor: default; position: relative; }
+  .bar:hover { opacity: 0.8; }
+  .bar-tip { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--bg); border: 1px solid var(--border-strong); padding: 6px 10px; font-family: 'Space Mono', monospace; font-size: 10px; white-space: nowrap; z-index: 10; color: var(--text); pointer-events: none; }
+  .bar:hover .bar-tip { display: block; }
+  .bar-lbl { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--text-muted); margin-top: 8px; }
+  .chart-legend { display: flex; gap: 16px; margin-top: 16px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-family: 'Space Mono', monospace; font-size: 10px; color: var(--text-dim); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+  section h2 { font-size: 28px; font-weight: 600; color: var(--text-strong); margin-bottom: 20px; line-height: 1.3; letter-spacing: -0.3px; }
+  section p { font-size: 16px; color: var(--text); line-height: 1.9; margin-bottom: 20px; }
+
+  .pull { border-left: 2px solid var(--accent); padding: 20px 24px; margin: 32px 0; background: var(--accent-dim); }
+  .pull p { font-size: 16px; color: var(--text-strong); margin: 0; line-height: 1.8; font-weight: 500; }
+
+  footer { padding: 48px 0 56px; border-top: 1px solid var(--border); }
+  .footer-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .footer-mark { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); }
+  .footer-links { display: flex; gap: 16px; }
+  .footer-links a { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--accent); }
+
+  .loading { color: var(--text-muted); font-family: 'Space Mono', monospace; font-size: 12px; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .animate { animation: fadeUp 0.5s ease-out both; }
+  .d1 { animation-delay: 0.1s; } .d2 { animation-delay: 0.2s; } .d3 { animation-delay: 0.3s; } .d4 { animation-delay: 0.4s; }
+
+  @media (max-width: 640px) {
+    .hero-vision { padding: 40px 0 32px; }
+    .hero-vision h1 { font-size: 32px; }
+    .big-number { font-size: 48px; }
+    .stat-row { grid-template-columns: 1fr; }
+    .category-grid { grid-template-columns: 1fr 1fr; }
+    .wrap { padding: 0 20px; }
+    .nav-right { gap: 10px; }
+    .footer-top { flex-direction: column; gap: 12px; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo-group">
+      <img src="/avatar.jpg" alt="Lauki Antonson" class="logo-avatar">
+      <a href="/" class="mark">LAUKI</a>
+    </div>
+    <div class="nav-right">
+      <a href="/" class="nav-link">Home</a>
+      <a href="https://x.com/laukiantonson" target="_blank" class="nav-link">@laukiantonson</a>
+    </div>
+  </div>
+</header>
+
+<div class="hero-vision">
+  <div class="wrap">
+    <h1 class="animate">The Intelligence Layer</h1>
+    <p class="animate d1">
+      Lauki doesn't just execute tasks. It builds a living map of the world it operates in — people, companies, markets, cycles. Every conversation, every interaction adds to this layer. Here's what it looks like right now.
+    </p>
+  </div>
+</div>
+
+<hr>
+
+<section>
+  <div class="wrap">
+    <div class="section-num animate d2">Live Stats</div>
+
+    <div id="stats-content">
+      <div class="loading">Loading live data...</div>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <div class="wrap">
+    <div class="section-num">What This Means</div>
+    <h2>Every Entity Is a Relationship</h2>
+    <p>
+      Each entity Lauki tracks isn't a row in a database. It's a relationship — context about a person, understanding of a company, awareness of a market cycle. When Lauki talks to someone, it already knows who they are, what they care about, and what happened last time.
+    </p>
+    <div class="pull">
+      <p>This isn't a CRM. It's memory. It's context. It's the difference between an assistant that follows instructions and one that understands the world it operates in.</p>
+    </div>
+    <p>
+      The numbers above update in real time. Every day, Lauki creates new entities from conversations and research, and updates existing ones as relationships evolve. The intelligence layer grows continuously.
+    </p>
+  </div>
+</section>
+
+<hr>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-mark">Lauki — 2026</div>
+      <div class="footer-links">
+        <a href="/" >Home</a>
+        <a href="https://x.com/laukiantonson" target="_blank">@laukiantonson</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(async function() {
+  const el = document.getElementById('stats-content');
+  try {
+    const r = await fetch('https://lauki.mogra.xyz/v1/public/entity-stats');
+    if (!r.ok) throw new Error('Failed to load');
+    const d = await r.json();
+
+    const catNames = { people: 'People', companies: 'Companies', projects: 'Projects', events: 'Events', other: 'Other', cycles: 'Cycles' };
+    const fmt = n => n.toLocaleString();
+
+    let h = '';
+
+    h += `<div class="big-number animate">${fmt(d.total)}</div>`;
+    h += `<div class="big-label animate d1">entities tracked — people, companies, projects, markets, and cycles</div>`;
+
+    h += '<div class="stat-row animate d2">';
+    h += `<div class="stat-cell"><div class="stat-val stat-val-green">+${fmt(d.created_24h)}</div><div class="stat-sub">New entities today</div></div>`;
+    h += `<div class="stat-cell"><div class="stat-val stat-val-blue">${fmt(d.updated_24h)}</div><div class="stat-sub">Updated today</div></div>`;
+    h += `<div class="stat-cell"><div class="stat-val stat-val-green">+${fmt(d.created_7d)}</div><div class="stat-sub">Created this week</div></div>`;
+    h += `<div class="stat-cell"><div class="stat-val stat-val-blue">${fmt(d.updated_7d)}</div><div class="stat-sub">Updated this week</div></div>`;
+    h += '</div>';
+
+    h += '<div class="category-grid animate d3">';
+    for (const [key, count] of Object.entries(d.categories)) {
+      h += `<div class="cat-cell"><div class="cat-val">${fmt(count)}</div><div class="cat-label">${catNames[key] || key}</div></div>`;
+    }
+    h += '</div>';
+
+    if (d.daily && d.daily.length) {
+      const maxV = Math.max(...d.daily.map(r => Math.max(r.created, r.updated)), 1);
+      h += '<div class="chart-section animate d4"><div class="chart-title">Daily Activity</div><div class="chart-bars">';
+      for (const row of d.daily) {
+        const cPct = Math.max((row.created / maxV) * 100, row.created ? 2 : 0);
+        const uPct = Math.max((row.updated / maxV) * 100, row.updated ? 2 : 0);
+        const lbl = row.day.slice(5);
+        h += `<div class="bar-group"><div class="bar-pair"><div class="bar" style="height:${cPct}%;background:var(--accent)"><div class="bar-tip">${lbl}: ${row.created} created</div></div><div class="bar" style="height:${uPct}%;background:var(--blue)"><div class="bar-tip">${lbl}: ${row.updated} updated</div></div></div><div class="bar-lbl">${lbl}</div></div>`;
+      }
+      h += '</div><div class="chart-legend"><div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Created</div><div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Updated</div></div></div>';
+    }
+
+    el.innerHTML = h;
+  } catch (e) {
+    el.innerHTML = '<div class="loading">Stats temporarily unavailable.</div>';
+  }
+})();
+</script>
+
+</body>
+</html>
