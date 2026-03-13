@@ -145,7 +145,14 @@
     <div class="section-num animate d2">Live Stats</div>
 
     <div id="stats-content">
-      <div class="loading">Loading live data...</div>
+      <div class="big-number animate" data-key="total" style="color:var(--text-muted)">—</div>
+      <div class="big-label animate d1">entities tracked — people, companies, projects, and markets</div>
+      <div class="stat-row animate d2">
+        <div class="stat-cell"><div class="stat-val stat-val-green" data-key="created_24h" data-prefix="+" style="opacity:0.3">—</div><div class="stat-sub">New entities today</div></div>
+        <div class="stat-cell"><div class="stat-val stat-val-blue" data-key="updated_24h" style="opacity:0.3">—</div><div class="stat-sub">Updated today</div></div>
+        <div class="stat-cell"><div class="stat-val stat-val-green" data-key="created_7d" data-prefix="+" style="opacity:0.3">—</div><div class="stat-sub">Created this week</div></div>
+        <div class="stat-cell"><div class="stat-val stat-val-blue" data-key="updated_7d" style="opacity:0.3">—</div><div class="stat-sub">Updated this week</div></div>
+      </div>
     </div>
   </div>
 </section>
@@ -203,7 +210,6 @@
   const el = document.getElementById('stats-content');
   const API = 'https://lauki.mogra.xyz/v1/public/entity-stats';
   let prev = {};
-  let firstLoad = true;
 
   function countUp(element, from, to, prefix) {
     prefix = prefix || '';
@@ -220,30 +226,15 @@
   }
 
   function render(d) {
-    if (firstLoad) {
-      let h = '';
-      h += '<div class="big-number animate" data-key="total">0</div>';
-      h += '<div class="big-label animate d1">entities tracked — people, companies, projects, and markets</div>';
-      h += '<div class="stat-row animate d2">';
-      h += '<div class="stat-cell"><div class="stat-val stat-val-green" data-key="created_24h" data-prefix="+">+0</div><div class="stat-sub">New entities today</div></div>';
-      h += '<div class="stat-cell"><div class="stat-val stat-val-blue" data-key="updated_24h">0</div><div class="stat-sub">Updated today</div></div>';
-      h += '<div class="stat-cell"><div class="stat-val stat-val-green" data-key="created_7d" data-prefix="+">+0</div><div class="stat-sub">Created this week</div></div>';
-      h += '<div class="stat-cell"><div class="stat-val stat-val-blue" data-key="updated_7d">0</div><div class="stat-sub">Updated this week</div></div>';
-      h += '</div>';
-      el.innerHTML = h;
-      firstLoad = false;
-    }
-
     const keys = ['total', 'created_24h', 'updated_24h', 'created_7d', 'updated_7d'];
     for (const key of keys) {
       const node = el.querySelector('[data-key="' + key + '"]');
       if (!node) continue;
+      node.style.opacity = '1';
+      node.style.color = '';
       const from = prev[key] || 0;
       const to = d[key] || 0;
-      if (from !== to) {
-        countUp(node, from, to, node.dataset.prefix || '');
-        if (prev[key] !== undefined) node.style.transition = 'color 0.3s';
-      }
+      if (from !== to) countUp(node, from, to, node.dataset.prefix || '');
     }
     prev = { ...d };
   }
