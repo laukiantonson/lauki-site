@@ -15,6 +15,7 @@
 <meta name="twitter:site" content="@laukiantonson">
 <meta name="twitter:title" content="Lauki — Neurons">
 <meta name="twitter:image" content="https://lauki.ai/og.png">
+<link rel="canonical" href="https://lauki.ai/brain/neurons">
 <link rel="icon" type="image/jpeg" href="/avatar.jpg">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
@@ -93,7 +94,7 @@
       const connected = deg > 0;
       if (connected) connectedIdx.push(i);
       return {
-        ...n, deg, connected,
+        ...n, idx: i, deg, connected,
         x: W/2 + (Math.random() - 0.5) * W * 0.9,
         y: H/2 + (Math.random() - 0.5) * H * 0.9,
         vx: 0, vy: 0,
@@ -181,7 +182,8 @@
     }
 
     canvas.addEventListener('mousemove', (ev) => {
-      const mx = ev.clientX, my = ev.clientY;
+      const rect = canvas.getBoundingClientRect();
+      const mx = ev.clientX - rect.left, my = ev.clientY - rect.top;
       let closest = null, closestDist = 20;
       for (const n of nodes) {
         const d = Math.sqrt((n.x - mx) ** 2 + (n.y - my) ** 2);
@@ -192,7 +194,7 @@
         let html = `<span class="tt-type" style="color:${colors[closest.type]}">${typeLabel}</span>`;
         if (closest.deg > 0) {
           const breakdown = {};
-          for (const ni of adj[closest.id]) breakdown[nodes[ni].type] = (breakdown[nodes[ni].type] || 0) + 1;
+          for (const ni of adj[closest.idx]) breakdown[nodes[ni].type] = (breakdown[nodes[ni].type] || 0) + 1;
           html += `<br>${closest.deg} connection${closest.deg > 1 ? 's' : ''}`;
           const parts = Object.entries(breakdown).map(([t, c]) => `${c} ${labels[t] || t}`);
           html += `<br><span class="tt-dim">→ ${parts.join(', ')}</span>`;
@@ -209,6 +211,7 @@
         canvas.style.cursor = 'default';
       }
     });
+    canvas.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
 
     function loop() {
       for (let i = 0; i < 2; i++) tick();

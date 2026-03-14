@@ -281,7 +281,7 @@
       const connected = deg > 0;
       if (connected) connectedIdx.push(i);
       return {
-        ...n, deg, connected,
+        ...n, idx: i, deg, connected,
         x: W/2 + (Math.random() - 0.5) * W * 0.9,
         y: H/2 + (Math.random() - 0.5) * H * 0.9,
         vx: 0, vy: 0,
@@ -382,7 +382,7 @@
         let html = `<span class="tt-type" style="color:${colors[closest.type]}">${typeLabel}</span>`;
         if (closest.deg > 0) {
           const breakdown = {};
-          for (const ni of adj[closest.id]) breakdown[nodes[ni].type] = (breakdown[nodes[ni].type] || 0) + 1;
+          for (const ni of adj[closest.idx]) breakdown[nodes[ni].type] = (breakdown[nodes[ni].type] || 0) + 1;
           html += `<br>${closest.deg} connection${closest.deg > 1 ? 's' : ''}`;
           const parts = Object.entries(breakdown).map(([t, c]) => `${c} ${labels[t] || t}`);
           html += `<br><span class="tt-dim">→ ${parts.join(', ')}</span>`;
